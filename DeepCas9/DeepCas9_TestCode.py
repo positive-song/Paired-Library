@@ -2,13 +2,13 @@ import os, sys
 from os.path import exists
 from os import system
 
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import numpy as np
 import scipy.misc
 import scipy.stats
 from scipy.stats import rankdata
 
-np.set_printoptions(threshold='nan')
+np.set_printoptions(threshold=0)
 
 ##############################################################################
 
@@ -133,9 +133,9 @@ def preprocess_seq(data):
             elif data[l][i] in "Gg": DATA_X[l, 0, i, 2] = 1
             elif data[l][i] in "Tt": DATA_X[l, 0, i, 3] = 1
             else:
-                print "Non-ATGC character " + data[l]
-                print i
-                print data[l][i]
+                print("Non-ATGC character " + data[l])
+                print(i)
+                print(data[l][i])
                 sys.exit()
         #loop end: i
     #loop end: l
@@ -150,18 +150,20 @@ def getseq(filenum):
     data    = FILE.readlines()
     data_n  = len(data) - 1
     seq     = []
-
+    print(data)
+    print('================')
     for l in range(1, data_n+1):
         try:
             data_split = data[l].split()
             seq.append(data_split[1])
         except:
-            print data[l]
+            print(data[l])
             seq.append(data[l])
     #loop end: l
     FILE.close()
     processed_full_seq = preprocess_seq(seq)
-
+    # print(seq)  # TAAGAGAAT
+    # print(processed_full_seq)   # [[[0, 0, 0, 1][1, 0, 0, 0]]...
     return processed_full_seq, seq
 #def end: getseq
 
@@ -195,14 +197,18 @@ for index in range(len(best_model_list)):
     fulllist        = []
     
     for value in valuelist:
-        if value == 'True':    value=True
-        elif value == 'False': value=False
+        if value == 'True':
+            value = True
+        elif value == 'False':
+            value = False
         else:
             try:
-                value=int(value)
+                value = int(value)
             except:
-                try:    value=float(value)
-                except: pass
+                try:
+                    value = float(value)
+                except:
+                    pass
         fulllist.append(value)
     #loop end: value
 
